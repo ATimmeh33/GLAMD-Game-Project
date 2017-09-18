@@ -113,11 +113,11 @@ namespace Assets.Scripts.Utilities
 		{
 			Chances = new Generator();
 			StartCoroutine(CoroutineHelper.For(
-				15,
+				12.5f,
 				() => 25,
 				i => i <= 75,
 				(ref int i) => i += 3,
-				i => Chances.Fill(i, 20, 25, 35 - i)));
+				i => Chances.Fill(i, 20, 25, 75 - i)));
 		}
 
 		private GameObject JumpableObstacle()
@@ -204,16 +204,16 @@ namespace Assets.Scripts.Utilities
 			if (block < 3)
 			{
 				return RandomUtilities.WeightedPick(
-					heart.ToWeightedItem(2),
-					slowmotion.ToWeightedItem(20),
-					inhaler.ToWeightedItem(50),
-					doubleCoins.ToWeightedItem(75));
+					heart.ToWeightedItem(1),
+					slowmotion.ToWeightedItem(40),
+					inhaler.ToWeightedItem(100),
+					doubleCoins.ToWeightedItem(150));
 			}
 			else
 			{
 				return RandomUtilities.WeightedPick(
-					heart.ToWeightedItem(2),
-					inhaler.ToWeightedItem(50));
+					heart.ToWeightedItem(1),
+					inhaler.ToWeightedItem(100));
 			}
 		}
 

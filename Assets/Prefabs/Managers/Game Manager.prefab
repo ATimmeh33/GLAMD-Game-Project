@@ -66,7 +66,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _logLevel: 0
-  _developmentMode: 0
-  _skipLogin: 1
+  _localMode: 0
+  _skipLogin: 0
   id: 55829449-F934-4AD3-B224-931B4D56F6EC
   username: Tester

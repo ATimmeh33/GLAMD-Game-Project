@@ -16,7 +16,7 @@ namespace Assets.Scripts.Managers
 	public class GameManager
 		: MonoBehaviour
 	{
-		public const int AD_SHOW_AMOUNT = 5;
+		public const int AD_SHOW_AMOUNT = 10;
 
 		private int adCounter;
 		private static readonly RNG rng = new RNG();

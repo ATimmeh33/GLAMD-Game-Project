@@ -110,17 +110,17 @@ namespace Assets.Scripts.Controllers
 
 				GameManager.Instance.GuiManager.UpdateLives(value, value < Lives);
 
-				_lives = value;
-
 				if (value <= 0)
 				{
 					GameOver();
 				}
-				else
+				else if (value < _lives)
 				{
 					IsInvincible = true;
 					StartCoroutine(CoroutineHelper.Delay(INVINCIBLE_TIME_AFTER_DAMAGED, () => IsInvincible = false));
 				}
+
+				_lives = value;
 			}
 		}
 
