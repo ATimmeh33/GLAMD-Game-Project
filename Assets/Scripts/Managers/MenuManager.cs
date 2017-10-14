@@ -113,6 +113,7 @@ namespace Assets.Scripts.Managers
 		{
 			if (GameManager.Instance.User == null)
 			{
+				// Check if user was previously logged in.
 				if (PlayerPrefs.HasKey("Id") && PlayerPrefs.HasKey("Username"))
 				{
 					GameManager.Instance.User = new User
@@ -233,6 +234,7 @@ namespace Assets.Scripts.Managers
 
 		public void LoginButton()
 		{
+			// Ensures we don't send multiple login requests to API if user spams button.
 			if (isProcessingButton)
 			{
 				return;
@@ -244,6 +246,7 @@ namespace Assets.Scripts.Managers
 			string username = loginUsername.text;
 			string password = loginPassword.text;
 
+			// Input validation
 			if (username.Length == 0 || password.Length == 0)
 			{
 				SetLoginError(lblErrorLogin, "Vul uw login gegevens in");
@@ -251,21 +254,26 @@ namespace Assets.Scripts.Managers
 				return;
 			}
 
+			// Sends login request
 			StartCoroutine(ApiManager.UserCalls.LoginUser(
 				username,
 				Hasher.Hash(password),
 				onSuccess: user =>
 				{
+					// Logs the user in with received user data.
 					GameManager.Instance.Login(user);
 
 					SetUsername(username);
 					ClearInputFieldsAndErrors();
+
+					// Redirect to main menu.
 					loginPanel.SetActive(false);
 					homePanel.SetActive(true);
 					isProcessingButton = false;
 				},
 				onFailure: error =>
 				{
+					// Display error message.
 					if (error.Message.Contains("Invalid"))
 					{
 						SetLoginError(lblErrorLogin, "Incorrecte login gegevens");
@@ -281,6 +289,7 @@ namespace Assets.Scripts.Managers
 
 		public void RegisterButton()
 		{
+			// Ensures we don't send multiple reqister requests to API if user spams button.
 			if (isProcessingButton)
 			{
 				return;
@@ -293,6 +302,7 @@ namespace Assets.Scripts.Managers
 			string password = registerPassword.text;
 			string confirmPassword = registerConfirmPassword.text;
 
+			// Input validation
 			if (username.Length < 4)
 			{
 				SetLoginError(lblErrorUsername, "Minimaal 4 karakters");
@@ -316,6 +326,7 @@ namespace Assets.Scripts.Managers
 				SetLoginError(lblErrorConfirmPassword, "Wachtwoorden komen niet overeen");
 			}
 
+			// Check if any of the validations failed, if so show error.
 			if (lblErrorUsername.enabled ||
 				lblErrorPassword.enabled ||
 				lblErrorConfirmPassword.enabled)
@@ -324,10 +335,12 @@ namespace Assets.Scripts.Managers
 				return;
 			}
 
+			// Check if user exists.
 			StartCoroutine(ApiManager.UserCalls.UserExists(
 				username,
 				onSuccess: userId =>
 				{
+					// If user exists show error.
 					if (userId.HasValue)
 					{
 						SetLoginError(lblErrorUsername, "Gebruikersnaam is al in gebruik");
@@ -335,27 +348,33 @@ namespace Assets.Scripts.Managers
 						return;
 					}
 
+					// Sends register request.
 					StartCoroutine(ApiManager.UserCalls.CreateUser(
 						username,
 						Hasher.Hash(password),
 						onSuccess: user =>
 						{
+							// Logs the registered user in.
 							GameManager.Instance.Login(user);
 
 							SetUsername(username);
 							ClearInputFieldsAndErrors();
+
+							// Send to main menu.
 							registerPanel.SetActive(false);
 							homePanel.SetActive(true);
 							isProcessingButton = false;
 						},
 						onFailure: error =>
 						{
+							// No internet error handling.
 							SetLoginError(lblErrorConfirmPassword, "Er is iets fout gegaan");
 							isProcessingButton = false;
 						}));
 				},
 				onFailure: error =>
 				{
+					// No internet error handling.
 					SetLoginError(lblErrorConfirmPassword, "Er is iets fout gegaan");
 					isProcessingButton = false;
 				}));

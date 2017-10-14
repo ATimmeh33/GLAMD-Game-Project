@@ -152,6 +152,8 @@ namespace Assets.Scripts.Managers
 				OpponentId = opponentId
 			};
 
+
+			// If we can show advertisements (only on mobile) show it once every AD_SHOW_AMOUNT times.
 #if UNITY_ADS
 			if (adCounter++ % AD_SHOW_AMOUNT == 0)
 			{
@@ -177,6 +179,7 @@ namespace Assets.Scripts.Managers
 
 		private void StartGame()
 		{
+			// If instructions are not disabled show them, else just show a regular loading screen.
 			if (ShowInstructions)
 			{
 				StartCoroutine(CoroutineHelper.For(
@@ -200,6 +203,7 @@ namespace Assets.Scripts.Managers
 
 		public void Login(User user)
 		{
+			// Sets the user that logged in and saves it to player preferences.
 			User = user;
 
 			PlayerPrefs.SetString("Id", user.Id.ToString());
@@ -209,6 +213,7 @@ namespace Assets.Scripts.Managers
 
 		public void Logout()
 		{
+			// Removes the set player that was logged in and removes entries from the player preferences.
 			User = null;
 
 			PlayerPrefs.DeleteKey("Id");
@@ -218,6 +223,7 @@ namespace Assets.Scripts.Managers
 
 		public void Pause()
 		{
+			// Pause the game and keep track of what was the timescale at the moment of pausing.
 			Paused = true;
 			unpausedTimeScale = Time.timeScale;
 			Time.timeScale = 0;
@@ -225,6 +231,7 @@ namespace Assets.Scripts.Managers
 
 		public void Unpause()
 		{
+			// Return the timescale back to the original pausing timescale.
 			Time.timeScale = unpausedTimeScale;
 			Paused = false;
 		}
@@ -236,6 +243,7 @@ namespace Assets.Scripts.Managers
 
 		public void HandleFinishedMultiplayerCreateGame()
 		{
+			// Create the challenge that was just created, afterwards send the ghost data in a seperate call, show end screen afterwards.
 			StartCoroutine(ApiManager.MatchCalls.CreateMatch(
 						RandomUtilities.Seed,
 						CurrentGame.OpponentId.Value,
@@ -263,6 +271,7 @@ namespace Assets.Scripts.Managers
 
 		public void HandleFinishedMultiplayerChallengeGame()
 		{
+			// Update the match with the challenge receiving player's score, show end screen afterwards.
 			StartCoroutine(ApiManager.MatchCalls.UpdateMatch(
 						CurrentGame.Match.Id,
 						Player.Points + Player.Coins,
@@ -278,6 +287,7 @@ namespace Assets.Scripts.Managers
 
 		public void HandleFinishedSingleplayerGame()
 		{
+			// Send singleplayer highscore to API, show end screen afterwards.
 			StartCoroutine(ApiManager.HighscoreCalls.HighscoreAdd(
 				User.Username,
 				Player.Points + Player.Coins,

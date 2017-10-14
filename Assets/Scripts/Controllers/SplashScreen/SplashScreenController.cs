@@ -22,7 +22,8 @@ namespace Assets.Scripts.Controllers.SplashScreen
 			splashLogoImage.canvasRenderer.SetAlpha(0.0f);
 			splashUnityImage.canvasRenderer.SetAlpha(0.0f);
 
-			StartCoroutine(CoroutineHelper.ActionQueue(DELAYTIME,
+			StartCoroutine(CoroutineHelper.ActionQueue(
+				DELAYTIME,
 				() => FadeIn(splashLogoImage),
 				() => FadeIn(splashUnityImage),
 				() => SceneManager.LoadSceneAsync(loadlevel)));
